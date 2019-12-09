@@ -32,7 +32,7 @@ struct FirstFM
 
   void advance()
   {
-    phase1_ += angle_delta1_ * ( 1 - osc_sinf(phase2_) * gain_ );
+    phase1_ += angle_delta1_ * ( 1 + osc_sinf(phase2_) * gain_ );
     phase2_ += angle_delta2_;
 
     phase1_ -= (uint16_t)phase1_;

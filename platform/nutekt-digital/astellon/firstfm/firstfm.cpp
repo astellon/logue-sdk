@@ -39,7 +39,7 @@ void OSC_PARAM(uint16_t index, uint16_t value)
   switch (index)
   {
     case k_user_osc_param_id1:
-      firstfm.ratio_ = clip01f(value * 0.02f);
+      firstfm.ratio_ = clip01f(value * 0.01f);
       break;
     case k_user_osc_param_id2:
       firstfm.gain_ = clip01f(value * 0.01f);

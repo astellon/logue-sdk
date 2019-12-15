@@ -88,11 +88,11 @@ static float buffer[BUFFER_SIZE];
 
 void OSC_INIT(uint32_t platform, uint32_t api)
 {
-	initmydsp(&simplesin, k_samplerate);
+  initmydsp(&simplesin, k_samplerate);
 
-	interface.num_params = 0;
-	ui.uiInterface = &interface;
-	ui.openTabBox = openTabBoxNutekt;
+  interface.num_params = 0;
+  ui.uiInterface = &interface;
+  ui.openTabBox = openTabBoxNutekt;
   ui.openHorizontalBox = openHorizontalBoxNutekt;
   ui.openVerticalBox = openVerticalBoxNutekt;
   ui.closeBox = closeBoxNutekt;
@@ -105,26 +105,26 @@ void OSC_INIT(uint32_t platform, uint32_t api)
   ui.addVerticalBargraph = addVerticalBargraphNutekt;
   ui.declare = declareNutekt;
 
-	buildUserInterfacemydsp(&simplesin, &ui);
+  buildUserInterfacemydsp(&simplesin, &ui);
 }
 
 void OSC_CYCLE(const user_osc_param_t * const params,
                int32_t *yn,
                const uint32_t frames)
 {
-	q31_t* __restrict y = (q31_t *)yn;
-	float* ptr = buffer;
+  q31_t* __restrict y = (q31_t *)yn;
+  float* ptr = buffer;
 
-	int read = 0;
+  int read = 0;
 
-	while (read < frames) {
-		int num_to_read = min(frames - read, BUFFER_SIZE);
+  while (read < frames) {
+    int num_to_read = min(frames - read, BUFFER_SIZE);
 
-		computemydsp(&simplesin, num_to_read, NULL, &ptr);
-	  buf_f32_to_q31(ptr, y + read, num_to_read);
+    computemydsp(&simplesin, num_to_read, NULL, &ptr);
+    buf_f32_to_q31(ptr, y + read, num_to_read);
 
-		read += num_to_read;
-	}
+    read += num_to_read;
+  }
 }
 
 void OSC_NOTEON(const user_osc_param_t * const params)
@@ -139,8 +139,8 @@ void OSC_NOTEOFF(const user_osc_param_t * const params)
 
 void OSC_PARAM(uint16_t index, uint16_t value)
 {
-	if (index < interface.num_params) {
-		Param p = interface.params[index];
-		*(p.zone) = linintf(value * 0.01f, p.min, p.max);
-	}
+  if (index < interface.num_params) {
+    Param p = interface.params[index];
+    *(p.zone) = linintf(value * 0.01f, p.min, p.max);
+  }
 }

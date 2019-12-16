@@ -18,11 +18,18 @@
 
 #define FAUSTFLOAT float
 
+// index of parameter for note frequency
+#ifndef PITCH_INDEX
+#define PITCH_INDEX 0
+#endif
+
 #define BUFFER_SIZE 32
 
 #include "buffer_ops.h"
 #include "userosc.h"
+
 #include "nutekt.h"
+
 
 //----------------------------------------------------------------------------
 //  Abstract user interface
@@ -129,7 +136,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
 
 void OSC_NOTEON(const user_osc_param_t * const params)
 {
-  // NOTE ON
+  *(interface.params[PITCH_INDEX].zone) = osc_notehzf((params->pitch)>>8);
 }
 
 void OSC_NOTEOFF(const user_osc_param_t * const params)
@@ -139,7 +146,7 @@ void OSC_NOTEOFF(const user_osc_param_t * const params)
 
 void OSC_PARAM(uint16_t index, uint16_t value)
 {
-  if (index < interface.num_params) {
+  if (index != PITCH_INDEX && index < interface.num_params) {
     Param p = interface.params[index];
     *(p.zone) = linintf(value * 0.01f, p.min, p.max);
   }

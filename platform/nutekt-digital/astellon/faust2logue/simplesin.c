@@ -96,27 +96,28 @@ typedef struct {
 
 #ifndef FAUSTFLOAT
 #define FAUSTFLOAT float
-#endif 
+#endif
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "fastmath.h"
 #include <math.h>
 #include <stdlib.h>
 
 
-#ifndef FAUSTCLASS 
+#ifndef FAUSTCLASS
 #define FAUSTCLASS mydsp
 #endif
-#ifdef __APPLE__ 
+#ifdef __APPLE__
 #define exp10f __exp10f
 #define exp10 __exp10
 #endif
 
 typedef struct {
-	
+
 	int fSamplingFreq;
 	float fConst0;
 	FAUSTFLOAT fHslider0;
@@ -124,19 +125,19 @@ typedef struct {
 	float fRec2[2];
 	float fRec1[2];
 	float fRec0[2];
-	
+
 } mydsp;
 
-mydsp* newmydsp() { 
-	mydsp* dsp = (mydsp*)calloc(1, sizeof(mydsp));
-	return dsp;
-}
+//mydsp* newmydsp() {
+//	mydsp* dsp = (mydsp*)calloc(1, sizeof(mydsp));
+//	return dsp;
+//}
 
-void deletemydsp(mydsp* dsp) { 
-	free(dsp);
-}
+//void deletemydsp(mydsp* dsp) {
+//	free(dsp);
+//}
 
-void metadatamydsp(MetaGlue* m) { 
+void metadatamydsp(MetaGlue* m) {
 	m->declare(m->metaInterface, "filename", "simplesin");
 	m->declare(m->metaInterface, "maths.lib/author", "GRAME");
 	m->declare(m->metaInterface, "maths.lib/copyright", "GRAME");
@@ -152,11 +153,11 @@ int getSampleRatemydsp(mydsp* dsp) { return dsp->fSamplingFreq; }
 
 int getNumInputsmydsp(mydsp* dsp) {
 	return 0;
-	
+
 }
 int getNumOutputsmydsp(mydsp* dsp) {
 	return 1;
-	
+
 }
 int getInputRatemydsp(mydsp* dsp, int channel) {
 	int rate;
@@ -165,10 +166,10 @@ int getInputRatemydsp(mydsp* dsp, int channel) {
 			rate = -1;
 			break;
 		}
-		
+
 	}
 	return rate;
-	
+
 }
 int getOutputRatemydsp(mydsp* dsp, int channel) {
 	int rate;
@@ -181,19 +182,19 @@ int getOutputRatemydsp(mydsp* dsp, int channel) {
 			rate = -1;
 			break;
 		}
-		
+
 	}
 	return rate;
-	
+
 }
 
 void classInitmydsp(int samplingFreq) {
-	
+
 }
 
 void instanceResetUserInterfacemydsp(mydsp* dsp) {
 	dsp->fHslider0 = (FAUSTFLOAT)440.0f;
-	
+
 }
 
 void instanceClearmydsp(mydsp* dsp) {
@@ -202,44 +203,44 @@ void instanceClearmydsp(mydsp* dsp) {
 		int l0;
 		for (l0 = 0; (l0 < 2); l0 = (l0 + 1)) {
 			dsp->iVec0[l0] = 0;
-			
+
 		}
-		
+
 	}
 	/* C99 loop */
 	{
 		int l1;
 		for (l1 = 0; (l1 < 2); l1 = (l1 + 1)) {
 			dsp->fRec2[l1] = 0.0f;
-			
+
 		}
-		
+
 	}
 	/* C99 loop */
 	{
 		int l2;
 		for (l2 = 0; (l2 < 2); l2 = (l2 + 1)) {
 			dsp->fRec1[l2] = 0.0f;
-			
+
 		}
-		
+
 	}
 	/* C99 loop */
 	{
 		int l3;
 		for (l3 = 0; (l3 < 2); l3 = (l3 + 1)) {
 			dsp->fRec0[l3] = 0.0f;
-			
+
 		}
-		
+
 	}
-	
+
 }
 
 void instanceConstantsmydsp(mydsp* dsp, int samplingFreq) {
 	dsp->fSamplingFreq = samplingFreq;
 	dsp->fConst0 = (6.28318548f / min(192000.0f, max(1.0f, (float)dsp->fSamplingFreq)));
-	
+
 }
 
 void instanceInitmydsp(mydsp* dsp, int samplingFreq) {
@@ -257,7 +258,7 @@ void buildUserInterfacemydsp(mydsp* dsp, UIGlue* ui_interface) {
 	ui_interface->openVerticalBox(ui_interface->uiInterface, "simplesin");
 	ui_interface->addHorizontalSlider(ui_interface->uiInterface, "frequency", &dsp->fHslider0, 440.0f, 0.0f, 5000.0f, 0.00100000005f);
 	ui_interface->closeBox(ui_interface->uiInterface);
-	
+
 }
 
 void computemydsp(mydsp* dsp, int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs) {
@@ -276,11 +277,11 @@ void computemydsp(mydsp* dsp, int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outpu
 			dsp->fRec2[1] = dsp->fRec2[0];
 			dsp->fRec1[1] = dsp->fRec1[0];
 			dsp->fRec0[1] = dsp->fRec0[0];
-			
+
 		}
-		
+
 	}
-	
+
 }
 
 #ifdef __cplusplus
@@ -290,12 +291,12 @@ void computemydsp(mydsp* dsp, int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outpu
 
 static UIGlue ui;
 static NutektUIInterface interface;
-static FAUSTCLASS simplesin;
+static FAUSTCLASS faustclass;
 static float buffer[BUFFER_SIZE];
 
 void OSC_INIT(uint32_t platform, uint32_t api)
 {
-  initmydsp(&simplesin, k_samplerate);
+  initmydsp(&faustclass, k_samplerate);
 
   interface.num_params = 0;
   ui.uiInterface = &interface;
@@ -312,7 +313,7 @@ void OSC_INIT(uint32_t platform, uint32_t api)
   ui.addVerticalBargraph = addVerticalBargraphNutekt;
   ui.declare = declareNutekt;
 
-  buildUserInterfacemydsp(&simplesin, &ui);
+  buildUserInterfacemydsp(&faustclass, &ui);
 }
 
 void OSC_CYCLE(const user_osc_param_t * const params,
@@ -327,7 +328,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
   while (read < frames) {
     int num_to_read = min(frames - read, BUFFER_SIZE);
 
-    computemydsp(&simplesin, num_to_read, NULL, &ptr);
+    computemydsp(&faustclass, num_to_read, NULL, &ptr);
     buf_f32_to_q31(ptr, y + read, num_to_read);
 
     read += num_to_read;
@@ -346,10 +347,11 @@ void OSC_NOTEOFF(const user_osc_param_t * const params)
 
 void OSC_PARAM(uint16_t index, uint16_t value)
 {
-  if (index != PITCH_INDEX && index < interface.num_params) {
-    Param p = interface.params[index];
-    *(p.zone) = linintf(value * 0.01f, p.min, p.max);
-  }
+  if (index == PITCH_INDEX || index >= interface.num_params) return;
+
+  index = index < PITCH_INDEX ? index : index - 1;
+  Param p = interface.params[index];
+  *(p.zone) = linintf(value * 0.01f, p.min, p.max);
 }
 
 #endif

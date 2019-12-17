@@ -1,0 +1,3 @@
+dsp=$1
+
+faust -lang c -fm fastmath.h -a nutekt.c -o ${dsp%.*}.c $dsp

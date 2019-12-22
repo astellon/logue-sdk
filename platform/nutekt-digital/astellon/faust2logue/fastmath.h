@@ -16,12 +16,19 @@ inline float fast_sqrtf( const float x )
 
 static inline __attribute__((optimize("Ofast"), always_inline))
 inline float fast_sinf( const float x ) {
-  return fastersinf(x);
+  if (x > M_PI) {
+    return -1.0 * fast_sinf(x - M_PI);
+  } else if (x < 0) {
+    return -1.0 * fast_sinf(-x);
+  } else {
+    return fastsinf(x);
+  }
+  return 0;
 }
 
 static inline __attribute__((optimize("Ofast"), always_inline))
 inline float fast_cosf( const float x ) {
-  return fastercosf(x);
+  return fast_sinf(M_PI_2 - x);
 }
 
 #endif

@@ -146,9 +146,10 @@ void OSC_NOTEOFF(const user_osc_param_t * const params)
 
 void OSC_PARAM(uint16_t index, uint16_t value)
 {
-  if (index == PITCH_INDEX || index >= interface.num_params) return;
+  index = index < PITCH_INDEX ? index : index + 1;
 
-  index = index < PITCH_INDEX ? index : index - 1;
+	if (index >= interface.num_params) return;  // guard
+
   Param p = interface.params[index];
   *(p.zone) = linintf(value * 0.01f, p.min, p.max);
 }
